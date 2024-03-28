@@ -1,0 +1,25 @@
+p {
+
+}
+
+h1 {
+font-size: 3rem;
+}
+
+img {
+  border: 5px solid white;
+  width: 100%;
+}
+
+body {
+  background-color: black;
+}
+
+div {
+  width: 50%;
+  margin-left: 25%;
+  margin-top: 100px;
+  align-items: center;
+  font-family: 'El Messiri', sans-serif;
+  color: white;
+}
