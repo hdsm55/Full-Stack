@@ -19,10 +19,7 @@ app.use(express.static("public"));
 
 let currentUserId = 1;
 
-let users = [
-  { id: 1, name: "Angela", color: "teal" },
-  { id: 2, name: "Jack", color: "powderblue" },
-];
+let users = [];
 
 
 async function checkVisisted() {
@@ -52,7 +49,7 @@ app.get("/", async (req, res) => {
     res.render("index.ejs", {
       countries: countries,
       total: countries.length,
-      users: currentUser,
+      users: users,
       color: currentUser.color,
     });
   } catch (error) {
@@ -64,6 +61,7 @@ app.get("/", async (req, res) => {
 app.post("/add", async (req, res) => {
   const input = req.body["country"];
   
+  
   try {
     const result = await db.query(
       "SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';",
@@ -72,10 +70,11 @@ app.post("/add", async (req, res) => {
 
     const data = result.rows[0];
     const countryCode = data.country_code;
+    
     try {
       await db.query(
-        "INSERT INTO visited_countries (country_code) VALUES ($1)",
-        [countryCode]
+        "INSERT INTO visited_countries (country_code , user_id ) VALUES ($1 , $2)",
+        [countryCode , currentUserId]
       );
       res.redirect("/");
     } catch (err) {
@@ -85,13 +84,25 @@ app.post("/add", async (req, res) => {
     console.log(err);
   }
 });
-app.post("/user", async (req, res) => {
 
+app.post("/user", async (req, res) => { 
+    if ( req.body.add == "new"){
+    res.render("new.ejs")} else {
+      currentUserId = req.body.user
+      res.redirect("/")
+    }
 });
 
 app.post("/new", async (req, res) => {
+  const name = req.body.name;
+  const color = req.body.color;
+
+    const result = db.query("insert into users (name, color) values ($1 , $2) RETURNING *:",[
+      name ,color ])
   //Hint: The RETURNING keyword can return the data that was inserted.
   //https://www.postgresql.org/docs/current/dml-returning.html
+    const id = result.rows[0].id;
+      res.redirect("/");
 });
 
 app.listen(port, () => {
