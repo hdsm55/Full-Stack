@@ -100,7 +100,6 @@ app.post("/new", async (req, res) => {
     const result = db.query("insert into users (name, color) values ($1 , $2) RETURNING *:",[
       name ,color ])
   //Hint: The RETURNING keyword can return the data that was inserted.
-  //https://www.postgresql.org/docs/current/dml-returning.html
     const id = result.rows[0].id;
       res.redirect("/");
 });
