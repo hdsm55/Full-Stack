@@ -1,22 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
-import path from "path"; // تأكد من استيراد مكتبة path
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 // إعداد الملفات الثابتة
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static("public"));
 
 const db = new pg.Client({
   user: "postgres",
